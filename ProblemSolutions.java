@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Michael / 272-001
  *
  *   This java file contains the problem solutions of isSubSet, findKthLargest,
  *   and sort2Arrays methods. You should utilize the Java Collection Framework for
@@ -31,11 +31,20 @@ class ProblemSolutions {
      */
 
     public boolean isSubset(int list1[], int list2[]) {
+        Set<Integer> set = new HashSet<>();
 
-        // ADD YOU CODE HERE -- DON'T FORGET TO ADD YOR NAME AT TOP OF FILE
-
-        return false;
-    }
+        // Add all elements of list1 to the set
+        for (int num : list1) {
+            set.add(num);
+        }
+        // Check if all elements of list2 exist in the set
+        for (int num : list2) {
+            if (!set.contains(num)) { // If any element of list2 is not found in set, return false
+                return false;
+            }
+        }
+        return true;
+    } // Michael Quiroga - isSubset method
 
 
     /**
@@ -52,11 +61,11 @@ class ProblemSolutions {
      */
 
     public int findKthLargest(int[] array, int k) {
+        Arrays.sort(array);
 
-        // ADD YOUR CODE HERE
-
-        return 0;
-    }
+        // Return the k-th largest element, which is at (length - k) after sorting
+        return array[array.length - k];
+    } // Michael Quiroga - findKthLargest method
 
 
     /**
@@ -73,10 +82,19 @@ class ProblemSolutions {
      */
 
     public int[] sort2Arrays(int[] array1, int[] array2) {
+        int[] mergedArray = new int[array1.length + array2.length];
 
-        // ADD YOU CODE HERE
+        // Copy elements from array1 into mergedArray starting at index 0
+        System.arraycopy(array1, 0, mergedArray, 0, array1.length);
 
-        return null;
+        // Copy elements from array2 into mergedArray starting at index array1.length
+        System.arraycopy(array2, 0, mergedArray, array1.length, array2.length);
+
+        // Sort the merged array in ascending order
+        Arrays.sort(mergedArray);
+
+        // Return the sorted merged array
+        return mergedArray;
     }
 
-}
+} // Michael Quiroga - sort2Arrays method

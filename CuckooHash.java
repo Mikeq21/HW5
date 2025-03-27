@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Michael Quiroga / 272-001
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -244,14 +244,44 @@ public class CuckooHash<K, V> {
      * @param value the value of the element to add
 	 */
 
- 	public void put(K key, V value) {
+	public void put(K key, V value) {
+		// First, check for and prevent existing duplicate pairs
+		if (get(key) != null && get(key).equals(value)) {
+			return;
+		}
 
-		// ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME AT TOP OF FILE.
-		// Also make sure you read this method's prologue above, it should help
-		// you. Especially the two HINTS in the prologue.
+		// Create a new bucket with the key-value pair
+		Bucket<K, V> newBucket = new Bucket<>(key, value);
 
-		return;
-	}
+		// Initially, put location is always defined by h1(key)
+		int pos = hash1(key);
+
+		// Iteration counter to detect potential cycles
+		for (int i = 0; i < CAPACITY; i++) {
+			// If the position is empty, insert the new bucket
+			if (table[pos] == null) {
+				table[pos] = newBucket;
+				return;
+			}
+
+			// If position is not empty, swap the existing bucket with the new bucket
+			Bucket<K, V> existingBucket = table[pos];
+			table[pos] = newBucket;
+			newBucket = existingBucket;
+
+			// Alternate between h1 and h2 for the kicked-out bucket's location (This took embarassingly long...)
+			pos = (pos == hash1(newBucket.getBucKey())) ?
+					hash2(newBucket.getBucKey()) :
+					hash1(newBucket.getBucKey());
+		}
+
+		// If we've reached CAPACITY iterations, we've hit a potential cycle
+		// Grow the hashmap and rehash
+		rehash();
+
+		// Recursively reinsert the last kicked-out bucket
+		put(newBucket.getBucKey(), newBucket.getValue());
+	}  // Michael Quiroga - put method
 
 
 	/**
